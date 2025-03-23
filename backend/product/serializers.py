@@ -1,7 +1,9 @@
-from rest_framework import serializers
-from .models import Product
+from rest_framework_mongoengine.serializers import DocumentSerializer
+from product.models import Product
 
-class ProductSerializer(serializers.ModelSerializer):
+class ProductSerializer(DocumentSerializer):
+    """Serializer for MongoEngine Product model"""
+    
     class Meta:
         model = Product
-        fields = '__all__'  # Include all fields = ['id', 'name','description', 'category', 'price', 'brand', 'quantity']
+        fields = '__all__'

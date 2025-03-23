@@ -11,6 +11,20 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
+from mongoengine import connect
+
+# MongoDB connection configuration
+MONGO_DB_NAME = "products_db"
+MONGO_HOST = "localhost"
+MONGO_PORT = 27018
+MONGO_USERNAME = "root"
+MONGO_PASSWORD = "example"
+
+connect(
+    db=MONGO_DB_NAME,
+    host=f"mongodb://{MONGO_USERNAME}:{MONGO_PASSWORD}@{MONGO_HOST}:{MONGO_PORT}/?authSource=admin"
+)
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
