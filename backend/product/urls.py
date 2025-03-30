@@ -17,8 +17,11 @@ Including another URLconf
 
 from django.urls import path
 from .controllers.product_controller import ProductController  # Import from controller layer
+from .controllers.product_category_controller import ProductCategoryController
 
 urlpatterns = [
     path('products/', ProductController.as_view(), name='product_list'),                    
     path('products/<str:product_id>/', ProductController.as_view(), name='product_detail'),  # Use str for MongoDB ObjectId
+    path('categories/', ProductCategoryController.as_view(), name='category_list'),  
+    path('categories/<str:category_id>/', ProductCategoryController.as_view(), name='category_detail'),
 ]
