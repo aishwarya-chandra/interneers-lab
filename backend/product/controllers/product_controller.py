@@ -5,7 +5,6 @@ from product.services.product_service import ProductService
 from product.serializers import ProductSerializer
 from mongoengine import DoesNotExist, ValidationError, NotUniqueError
 
-
 class ProductController(APIView):
     """Handles HTTP requests for product management."""
 
@@ -29,14 +28,25 @@ class ProductController(APIView):
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
     def post(self, request):
-        """Create a new product."""
+        """Create a new product by category name or ObjectId."""
         try:
-            # Use serializer for validation
-            serializer = ProductSerializer(data=request.data)
+            data = request.data
+
+            # Convert category name to ObjectId in service layer
+            category_value = data.get("category")
+
+            if category_value:
+                try:
+                    data['category'] = ProductService.get_category_object_id(category_value)
+                except ValueError as e:
+                    return Response({"error": str(e)}, status=status.HTTP_404_NOT_FOUND)
             
+            # Validate and create the product
+            serializer = ProductSerializer(data=data)
+
             if serializer.is_valid():
                 product = ProductService.create_product(serializer.validated_data)
-                serializer = ProductSerializer(product)  # Serialize saved product
+                serializer = ProductSerializer(product)
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
 
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

@@ -1,4 +1,4 @@
-from mongoengine import ValidationError, NotUniqueError, BulkWriteError
+# from mongoengine import ValidationError, NotUniqueError, BulkWriteError
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -6,29 +6,40 @@ from rest_framework import status
 from product.repositories.product_category_repository import ProductCategoryRepository
 from product.serializers import ProductCategorySerializer
 from product.models import ProductCategory
+from ..repositories.product_repository import ProductRepository
 
 class ProductCategoryController(APIView):
     """Controller layer for handling product category HTTP requests using serializers."""
 
-    def get(self, request, category_id=None):
-        """Retrieve all categories or a specific one by ID."""
-        
+    def get(self, request, category_id=None, products=False):
+        """Retrieve all categories, a specific one by ID, or products by category."""
+
+        # Check if fetching products by category
+        if products and category_id:
+            # Fetch products belonging to the category
+            products = ProductRepository.get_by_category(category_id)
+
+            if not products:
+                return Response({"message": "No products found for this category"}, status=status.HTTP_404_NOT_FOUND)
+
+            serializer = ProductCategorySerializer(products, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+
+        # Fetch specific category
         if category_id:
-            # Fetch a specific category
-            category = ProductCategoryRepository.get_by_id(category_id)
-            
+            category = ProductCategoryRepository.get_by_name_or_id(category_id)
+
             if category:
                 serializer = ProductCategorySerializer(category)
                 return Response(serializer.data, status=status.HTTP_200_OK)
-            
+
             return Response({"error": "Category not found"}, status=status.HTTP_404_NOT_FOUND)
 
         # Fetch all categories
         categories = ProductCategoryRepository.get_all()
         serializer = ProductCategorySerializer(categories, many=True)
-
         return Response(serializer.data, status=status.HTTP_200_OK)
-
+    
     def post(self, request):
         """Create one or multiple categories."""
         data = request.data
@@ -57,7 +68,7 @@ class ProductCategoryController(APIView):
     def put(self, request, category_id):
         """Update a category."""
         
-        category = ProductCategoryRepository.get_by_id(category_id)
+        category = ProductCategoryRepository.get_by_name_or_id(category_id)
         
         if not category:
             return Response({"error": "Category not found"}, status=status.HTTP_404_NOT_FOUND)

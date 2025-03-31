@@ -20,7 +20,7 @@ class Product(Document):
     description = StringField(required=True)
     
     # Reference to ProductCategory
-    category = ReferenceField(ProductCategory, reverse_delete_rule=CASCADE, required=True)
+    category = ReferenceField(ProductCategory, reverse_delete_rule=CASCADE, required=True, dbref=False, store_as_ref=False)
     
     price = DecimalField(min_value=Decimal("0.01"), precision=2, required=True)
     brand = StringField(max_length=100, required=True)

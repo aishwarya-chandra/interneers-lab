@@ -1,5 +1,6 @@
 from ..models import ProductCategory
-from mongoengine import DoesNotExist, ValidationError, NotUniqueError, BulkWriteError
+from mongoengine import ValidationError, NotUniqueError
+from bson import ObjectId
 
 class ProductCategoryRepository:
     """Repository layer to handle product category database operations."""
@@ -34,14 +35,16 @@ class ProductCategoryRepository:
             raise ValueError("One or more categories already exist.")
         except ValidationError as e:
             raise ValueError(str(e))
-
+        
     @staticmethod
-    def get_by_id(category_id):
-        """Fetch a product category by ID."""
-        try:
-            return ProductCategory.objects.get(id=category_id)
-        except DoesNotExist:
-            return None
+    def get_by_name_or_id(value):
+        """Retrieve a ProductCategory by name or ObjectId."""
+        if ObjectId.is_valid(value):
+            # Search by ObjectId
+            return ProductCategory.objects(id=value).first()
+        else:
+            # Search by category name
+            return ProductCategory.objects(name=value).first()
 
     @staticmethod
     def get_all():
@@ -51,7 +54,7 @@ class ProductCategoryRepository:
     @staticmethod
     def update(category_id, data):
         """Update an existing category."""
-        category = ProductCategoryRepository.get_by_id(category_id)
+        category = ProductCategoryRepository.get_by_name_or_id(category_id)
 
         if not category:
             return None
@@ -66,7 +69,7 @@ class ProductCategoryRepository:
     @staticmethod
     def delete(category_id):
         """Delete a product category."""
-        category = ProductCategoryRepository.get_by_id(category_id)
+        category = ProductCategoryRepository.get_by_name_or_id(category_id)
 
         if not category:
             return False

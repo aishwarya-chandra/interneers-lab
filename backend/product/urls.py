@@ -24,4 +24,5 @@ urlpatterns = [
     path('products/<str:product_id>/', ProductController.as_view(), name='product_detail'),  # Use str for MongoDB ObjectId
     path('categories/', ProductCategoryController.as_view(), name='category_list'),  
     path('categories/<str:category_id>/', ProductCategoryController.as_view(), name='category_detail'),
+    path('categories/<str:category_id>/products/', ProductCategoryController.as_view(), {'products': True}, name='products_by_category'),
 ]

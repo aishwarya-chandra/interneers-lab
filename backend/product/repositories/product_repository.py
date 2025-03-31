@@ -27,6 +27,11 @@ class ProductRepository:
             return Product.objects(id=product_id).select_related('category').first()
         except DoesNotExist:
             return None
+        
+    @staticmethod
+    def get_by_category(category_id):
+        """Fetch all products belonging to a specific category."""
+        return Product.objects(category=category_id)
 
     @staticmethod
     def find_by_name(name):
