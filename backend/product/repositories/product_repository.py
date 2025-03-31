@@ -18,13 +18,13 @@ class ProductRepository:
     @staticmethod
     def get_all():
         """Fetch all products from MongoDB."""
-        return Product.objects.all()
+        return Product.objects.select_related()  # Dereference the category
 
     @staticmethod
     def get_by_id(product_id):
         """Fetch a product by ID from MongoDB."""
         try:
-            return Product.objects.get(id=product_id)
+            return Product.objects(id=product_id).select_related('category').first()
         except DoesNotExist:
             return None
 

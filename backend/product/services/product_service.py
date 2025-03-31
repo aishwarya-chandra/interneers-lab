@@ -1,6 +1,9 @@
 # handles business logic and validations along with error handling
 from product.repositories.product_repository import ProductRepository
 from mongoengine import ValidationError, NotUniqueError
+from bson import ObjectId
+from ..models import ProductCategory
+
 
 class ProductService:
     """Service layer for business logic and validations."""
@@ -18,14 +21,32 @@ class ProductService:
     @staticmethod
     def create_product(product_data):
         """Business logic for creating a product with validation."""
-        
+
         # Validate product data
         ProductService.validate_product_data(product_data)
 
-        # Check for duplicate name
+        # Check for duplicate product name
         if ProductRepository.find_by_name(product_data['name']):
             raise ValueError("A product with this name already exists.")
         
+        # Validate and convert category reference to ObjectId
+        category_id = product_data.get('category')
+
+        # If the category is a string (name), convert it to ObjectId
+        if isinstance(category_id, str) and not ObjectId.is_valid(category_id):
+            # Check if it's a category name, fetch its ObjectId
+            category = ProductCategory.objects(name=category_id).first()
+
+            if not category:
+                raise ValueError(f"Category '{category_id}' not found.")
+            
+            # Use the ObjectId instead of the string
+            product_data['category'] = category.id
+
+        # Ensure the category field is an ObjectId
+        elif not ObjectId.is_valid(category_id):
+            raise ValueError("Invalid category ID format.")
+
         try:
             return ProductRepository.create(product_data)
         except (ValidationError, NotUniqueError) as e:

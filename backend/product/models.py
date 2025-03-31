@@ -1,3 +1,4 @@
+from decimal import Decimal 
 from mongoengine import Document, StringField, DecimalField, IntField, ReferenceField, CASCADE
 
 class ProductCategory(Document):
@@ -21,7 +22,7 @@ class Product(Document):
     # Reference to ProductCategory
     category = ReferenceField(ProductCategory, reverse_delete_rule=CASCADE, required=True)
     
-    price = DecimalField(min_value=0.01, precision=2, required=True)
+    price = DecimalField(min_value=Decimal("0.01"), precision=2, required=True)
     brand = StringField(max_length=100, required=True)
     quantity = IntField(min_value=1, required=True)
 
@@ -29,3 +30,4 @@ class Product(Document):
 
     def __str__(self):
         return self.name
+

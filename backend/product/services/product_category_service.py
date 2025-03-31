@@ -6,15 +6,29 @@ class ProductCategoryService:
 
     @staticmethod
     def create_category(data):
-        """Creates a new product category."""
-        try:
-            category = ProductCategory(**data)
-            category.save()
-            return category
-        except NotUniqueError:
-            raise ValueError("Category with this title already exists.")
-        except ValidationError as e:
-            raise ValueError(str(e))
+        """Creates one or multiple product categories."""
+        if isinstance(data, list):  # Check if it's a list
+            categories = []
+            for category_data in data:
+                if isinstance(category_data, dict):
+                    try:
+                        category = ProductCategory(**category_data)
+                        category.save()
+                        categories.append(category)
+                    except NotUniqueError:
+                        raise ValueError(f"Category '{category_data['name']}' already exists.")
+                    except ValidationError as e:
+                        raise ValueError(str(e))
+            return categories
+        else:  # Single category
+            try:
+                category = ProductCategory(**data)
+                category.save()
+                return category
+            except NotUniqueError:
+                raise ValueError("Category with this name already exists.")
+            except ValidationError as e:
+                raise ValueError(str(e))
 
     @staticmethod
     def get_category_by_id(category_id):
@@ -38,8 +52,8 @@ class ProductCategoryService:
             return None
 
         # Update only the provided fields
-        if 'title' in data:
-            category.title = data['title']
+        if 'name' in data:
+            category.name = data['name']
         if 'description' in data:
             category.description = data['description']
 
