@@ -109,6 +109,10 @@ class ProductService:
         product = ProductRepository.get_by_id(product_id)
         if not product:
             raise ValueError("Product not found.")
+        
+        # Auto-assign brand for existing products if missing or empty
+        if not product.brand or product.brand.strip() == "":
+            updated_data['brand'] = "Unknown"
 
         # Validate the updated data
         ProductService.validate_product_data(updated_data)

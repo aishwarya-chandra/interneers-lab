@@ -29,7 +29,7 @@ class ProductRepository:
             if isinstance(product_id, str):
                 product_id = ObjectId(product_id)
 
-            return Product.objects(id=product_id).first()  # REMOVE select_related('category')
+            return Product.objects(id=product_id).first()
         
         except DoesNotExist:
             return None
