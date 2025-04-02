@@ -12,9 +12,8 @@ class ProductController(APIView):
         """Fetch all products or a single product by ID."""
         try:
             if product_id:
-                product = ProductService.get_product_by_id(product_id)
+                product = ProductService.get_product_by_id(str(product_id))  # Ensure it's a string
                 if product:
-                    # Serialize the single product
                     serializer = ProductSerializer(product)
                     return Response(serializer.data, status=status.HTTP_200_OK)
                 return Response({"error": "Product not found"}, status=status.HTTP_404_NOT_FOUND)

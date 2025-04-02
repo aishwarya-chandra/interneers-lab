@@ -1,6 +1,7 @@
 # accessing data from MongoDB using MongoEngine ORM
 from product.models import Product
 from mongoengine import DoesNotExist
+from bson import ObjectId
 
 class ProductRepository:
     """Repository layer for interacting with MongoDB using MongoEngine."""
@@ -24,9 +25,16 @@ class ProductRepository:
     def get_by_id(product_id):
         """Fetch a product by ID from MongoDB."""
         try:
-            return Product.objects(id=product_id).select_related('category').first()
+            # Convert product_id to ObjectId if it's a string
+            if isinstance(product_id, str):
+                product_id = ObjectId(product_id)
+
+            return Product.objects(id=product_id).first()  # REMOVE select_related('category')
+        
         except DoesNotExist:
             return None
+        except Exception as e:
+            raise ValueError(f"Error fetching product: {str(e)}")
         
     @staticmethod
     def get_by_category(category_id):
