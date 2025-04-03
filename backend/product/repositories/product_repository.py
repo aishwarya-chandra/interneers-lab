@@ -1,5 +1,5 @@
 # accessing data from MongoDB using MongoEngine ORM
-from product.models import Product
+from models import Product
 from mongoengine import DoesNotExist
 from bson import ObjectId
 
