@@ -1,4 +1,4 @@
-from repositories.product_repository import ProductRepository
+from product.repositories.product_repository import ProductRepository
 from mongoengine import ValidationError, NotUniqueError, DoesNotExist
 
 class ProductService:
