@@ -1,4 +1,4 @@
-from models import ProductCategory
+from product.models import ProductCategory
 from mongoengine import ValidationError, NotUniqueError
 from bson import ObjectId
 
