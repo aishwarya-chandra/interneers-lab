@@ -1,6 +1,6 @@
 import unittest
 from unittest.mock import MagicMock
-from services.product_service import ProductService
+from product.services.product_service import ProductService
 from bson import ObjectId
 
 class TestProductService(unittest.TestCase):
