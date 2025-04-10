@@ -1,0 +1,31 @@
+/* Style the Product display tile with style sheets */
+* {
+    box-sizing: border-box;
+  }
+body {
+    background-color:rgb(234, 234, 226);
+    font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif
+}
+.product-tile {
+    background-color: pink;
+    padding: 1rem;
+    padding-left: 2rem;
+    padding-right: 2rem;
+    border: 2px solid #121111;
+    border-radius: 1rem;
+    box-shadow:0 1rem 2rem rgba(0,0,0,0.1);
+    margin: 3rem;
+    width: max-content;
+}
+h1 {
+    color: black;
+}
+p {
+    color: brown;
+    font-size: 20px;
+    margin-bottom: 0.5rem;
+}
+p strong {
+    color: black;
+}
+
