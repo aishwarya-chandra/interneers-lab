@@ -1,4 +1,4 @@
-from repositories.product_category_repository import ProductCategoryRepository
+from ..repositories.product_category_repository import ProductCategoryRepository
 
 class ProductCategoryService:
     """Service layer to handle product category operations using the repository."""
