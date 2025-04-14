@@ -1,3 +1,4 @@
+
 from product.repositories.product_category_repository import ProductCategoryRepository
 
 class ProductCategoryService:
