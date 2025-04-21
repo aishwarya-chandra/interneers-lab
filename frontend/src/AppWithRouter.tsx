@@ -1,17 +1,22 @@
 import { Routes, Route, Outlet, Link } from "react-router-dom";
+import ProductList from "ProductList";
 
 export default function App() {
   return (
     <div>
-      <h1>Basic Example</h1>
+      <header
+        style={{ backgroundColor: "#333", padding: "1rem", color: "#fff" }}
+      >
+        <h1>Dummy Products</h1>
+      </header>
 
-      <p>
+      {/* <p>
         This example demonstrates some of the core features of React Router
         including nested <code>&lt;Route&gt;</code>s,{" "}
         <code>&lt;Outlet&gt;</code>s, <code>&lt;Link&gt;</code>s, and using a
         "*" route (aka "splat route") to render a "not found" page when someone
         visits an unrecognized URL.
-      </p>
+      </p> */}
 
       {/* Routes nest inside one another. Nested route paths build upon
             parent route paths, and nested route elements render inside
@@ -19,6 +24,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
+          <Route path="product" element={<ProductList />} />
           <Route path="about" element={<About />} />
           <Route path="dashboard" element={<Dashboard />} />
 
@@ -41,6 +47,9 @@ function Layout() {
         <ul>
           <li>
             <Link to="/">Home</Link>
+          </li>
+          <li>
+            <Link to="/product">Products</Link>
           </li>
           <li>
             <Link to="/about">About</Link>
@@ -67,7 +76,8 @@ function Layout() {
 function Home() {
   return (
     <div>
-      <h2>Home</h2>
+      <h2>Welcome to the Home</h2>
+      <p>Click on "Products" to explore our catalog.</p>
     </div>
   );
 }
