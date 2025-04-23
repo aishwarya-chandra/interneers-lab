@@ -12,6 +12,7 @@ class TestProductServiceIntegration(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
+        disconnect(alias='default')
         connect(
         db="product_test_db",
         host="localhost",
