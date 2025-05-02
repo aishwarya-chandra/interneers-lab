@@ -4,6 +4,7 @@ from rest_framework import status
 
 from product.services.product_category_service import ProductCategoryService
 from product.serializers import ProductCategorySerializer
+from product.serializers import ProductSerializer
 from ..services.product_service import ProductService 
 
 class ProductCategoryController(APIView):
@@ -19,7 +20,7 @@ class ProductCategoryController(APIView):
             if not products:
                 return Response({"message": "No products found for this category"}, status=status.HTTP_404_NOT_FOUND)
 
-            serializer = ProductCategorySerializer(products, many=True)
+            serializer = ProductSerializer(products, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
 
         if category_id:
