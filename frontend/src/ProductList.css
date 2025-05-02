@@ -1,0 +1,17 @@
+.product-card {
+  cursor: pointer;
+  margin-bottom: 1rem;
+  border: 1px solid #ccc;
+  padding: 1rem;
+  border-radius: 8px;
+}
+
+.product-category {
+  color: #007bff; /* Blue color for the category */
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.product-category:hover {
+  color: #0056b3; /* Darker blue color when hovered */
+}

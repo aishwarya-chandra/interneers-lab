@@ -1,0 +1,35 @@
+/* Category List Container */
+.category-list-container {
+    padding: 1rem;
+  }
+  
+  /* Button Styling */
+  .create-category-button {
+    padding: 0.5rem 1rem;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .create-category-button:hover {
+    background-color: #0056b3;
+  }
+  
+  /* Category Card Styling */
+  .category-card {
+    cursor: pointer;
+    margin-bottom: 1rem;
+    border: 1px solid #ccc;
+    padding: 1rem;
+    border-radius: 8px;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+  }
+  
+  .category-card:hover {
+    background-color: #f1f1f1;
+    transform: scale(1.02);
+  }
+  

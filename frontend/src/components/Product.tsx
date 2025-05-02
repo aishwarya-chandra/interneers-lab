@@ -1,18 +1,15 @@
-//a single reusable component to project dummy data
 import React from "react";
+import { ProductType } from "./ProductList";
+import { useNavigate } from "react-router-dom";
+import "Product.css";
 
-type ProductProps = {
-  name: string;
-  description: string;
-  category: string;
-  brand: string;
-  price: string;
-  quantity: string;
+type ProductProps = ProductType & {
   isExpanded: boolean;
   onClick: () => void;
 };
 
 const Product: React.FC<ProductProps> = ({
+  id,
   name,
   description,
   category,
@@ -22,18 +19,9 @@ const Product: React.FC<ProductProps> = ({
   isExpanded,
   onClick,
 }) => {
+  const navigate = useNavigate();
   return (
-    <div
-      className="product-card"
-      onClick={onClick}
-      style={{
-        cursor: "pointer",
-        marginBottom: "1rem",
-        border: "1px solid #ccc",
-        padding: "1rem",
-        borderRadius: "8px",
-      }}
-    >
+    <div className="product-card" onClick={onClick}>
       <p>
         <strong>Name:</strong> {name}
       </p>
@@ -42,7 +30,13 @@ const Product: React.FC<ProductProps> = ({
           <p>
             <strong>Description:</strong> {description}
           </p>
-          <p>
+          <p
+            className="product-category"
+            onClick={(e) => {
+              e.stopPropagation();
+              navigate(`/category/${category}/`);
+            }}
+          >
             <strong>Category:</strong> {category}
           </p>
           <p>
@@ -54,6 +48,7 @@ const Product: React.FC<ProductProps> = ({
           <p>
             <strong>Quantity:</strong> {quantity}
           </p>
+          <button onClick={() => navigate(`/product/${id}/`)}>Edit</button>
         </>
       )}
     </div>
