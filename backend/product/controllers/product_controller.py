@@ -8,22 +8,34 @@ from bson import ObjectId
 
 class ProductController(APIView):
     """Handles HTTP requests for product management."""
-
+        
     def get(self, request, product_id=None):
         """Fetch all products or a single product by ID."""
         try:
             if product_id:
                 if not ObjectId.is_valid(product_id):
                     return Response({"error": "Invalid product ID."}, status=status.HTTP_400_BAD_REQUEST)
-                
+
                 product = ProductService.get_product_by_id(str(product_id))
                 if product:
                     return Response(ProductSerializer(product).data, status=status.HTTP_200_OK)
                 return Response({"error": "Product not found"}, status=status.HTTP_404_NOT_FOUND)
 
-            # Fetch all products
-            products = ProductService.get_all_products()
-            return Response(ProductSerializer(products, many=True).data, status=status.HTTP_200_OK)
+            # Handle pagination parameters
+            page = int(request.GET.get("page", 1))
+            page_size = int(request.GET.get("page_size", 10))
+
+            # Fetch paginated products and metadata
+            products, total_count = ProductService.get_all_products(page=page, page_size=page_size)
+            total_pages = (total_count + page_size - 1) // page_size
+
+            return Response({
+                "products": ProductSerializer(products, many=True).data,
+                "total_count": total_count,
+                "page": page,
+                "page_size": page_size,
+                "total_pages": total_pages
+            }, status=status.HTTP_200_OK)
 
         except (ValidationError, DoesNotExist, ValueError) as e:
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)

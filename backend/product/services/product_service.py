@@ -7,8 +7,8 @@ class ProductService:
     product_repository = ProductRepository()  # Instantiate the repository
 
     @staticmethod
-    def get_all_products():
-        return ProductService.product_repository.get_all()
+    def get_all_products(page=1, page_size=10):
+        return ProductService.product_repository.get_all_paginated(page, page_size)
 
     @staticmethod
     def get_product_by_id(product_id):
