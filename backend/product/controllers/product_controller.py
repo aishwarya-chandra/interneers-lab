@@ -23,18 +23,17 @@ class ProductController(APIView):
 
             # Handle pagination parameters
             page = int(request.GET.get("page", 1))
-            page_size = int(request.GET.get("page_size", 10))
+            page_size = int(request.GET.get("page_size", 5))
 
             # Fetch paginated products and metadata
             products, total_count = ProductService.get_all_products(page=page, page_size=page_size)
             total_pages = (total_count + page_size - 1) // page_size
 
             return Response({
-                "products": ProductSerializer(products, many=True).data,
-                "total_count": total_count,
-                "page": page,
-                "page_size": page_size,
-                "total_pages": total_pages
+                "count": total_count,
+                "next": f"{request.build_absolute_uri(request.path)}?page={page + 1}" if (page * page_size) < total_count else None,
+                "previous": f"{request.build_absolute_uri(request.path)}?page={page - 1}" if page > 1 else None,
+                "results": ProductSerializer(products, many=True).data
             }, status=status.HTTP_200_OK)
 
         except (ValidationError, DoesNotExist, ValueError) as e:

@@ -10,10 +10,7 @@ import {
 import ProductList from "components/ProductList";
 import Layout from "components/Layout";
 import Home from "components/Home";
-import {
-  CategoriesInfoLoader,
-  ProductsInfoLoader,
-} from "components/DataLoader";
+import { CategoriesInfoLoader } from "components/DataLoader";
 import ProductEdit from "components/ProductEdit";
 import CategoryList from "components/CategoryList";
 import CategoryInfo from "components/CategoryInfo";
@@ -24,11 +21,7 @@ const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<Layout />}>
       <Route path="" element={<Home />} />
-      <Route
-        loader={ProductsInfoLoader}
-        path="product"
-        element={<ProductList />}
-      />
+      <Route path="product" element={<ProductList />} />
       <Route
         loader={CategoriesInfoLoader}
         path="product/:id"
