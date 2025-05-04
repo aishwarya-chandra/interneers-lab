@@ -17,9 +17,12 @@ class ProductRepository:
             raise ValueError(f"Error creating product: {str(e)}")
 
     @staticmethod
-    def get_all():
-        """Fetch all products from MongoDB."""
-        return Product.objects.select_related()  # Dereference the category
+    def get_all_paginated(page, page_size):
+        """Fetch paginated products from MongoDB."""
+        skip = (page - 1) * page_size
+        queryset = Product.objects.skip(skip).limit(page_size)
+        total_count = Product.objects.count()
+        return list(queryset), total_count
 
     @staticmethod
     def get_by_id(product_id):
