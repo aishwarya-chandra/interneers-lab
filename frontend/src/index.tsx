@@ -1,18 +1,57 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import "./index.css";
-import App from "./AppWithRouter";
 import reportWebVitals from "./reportWebVitals";
-import { BrowserRouter } from "react-router-dom";
+import {
+  createBrowserRouter,
+  createRoutesFromElements,
+  Route,
+  RouterProvider,
+} from "react-router-dom";
+import ProductList from "components/ProductList";
+import Layout from "components/Layout";
+import Home from "components/Home";
+import {
+  CategoriesInfoLoader,
+  ProductsInfoLoader,
+} from "components/DataLoader";
+import ProductEdit from "components/ProductEdit";
+import CategoryList from "components/CategoryList";
+import CategoryInfo from "components/CategoryInfo";
+import CategoryEdit from "components/CategoryEdit";
+import CategoryCreate from "components/CategoryCreate";
+
+const router = createBrowserRouter(
+  createRoutesFromElements(
+    <Route path="/" element={<Layout />}>
+      <Route path="" element={<Home />} />
+      <Route
+        loader={ProductsInfoLoader}
+        path="product"
+        element={<ProductList />}
+      />
+      <Route
+        loader={CategoriesInfoLoader}
+        path="product/:id"
+        element={<ProductEdit />}
+      />
+      <Route
+        loader={CategoriesInfoLoader}
+        path="category"
+        element={<CategoryList />}
+      />
+      <Route path="category/:catId" element={<CategoryInfo />} />
+      <Route path="category/:catId/edit" element={<CategoryEdit />} />
+      <Route path="category/new" element={<CategoryCreate />} />
+    </Route>,
+  ),
+);
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement,
 );
 root.render(
   <React.StrictMode>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
+    <RouterProvider router={router} />
   </React.StrictMode>,
 );
 

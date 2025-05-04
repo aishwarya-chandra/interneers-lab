@@ -1,5 +1,5 @@
 import { Routes, Route, Outlet, Link } from "react-router-dom";
-import ProductList from "ProductList";
+import ProductList from "components/ProductList";
 
 export default function App() {
   return (
