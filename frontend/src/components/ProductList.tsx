@@ -10,6 +10,8 @@ export type ProductType = {
   brand: string;
   price: string;
   quantity: string;
+  created_at: string;
+  updated_at: string;
 };
 
 type ProductListProps = {

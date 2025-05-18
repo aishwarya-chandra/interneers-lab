@@ -16,6 +16,8 @@ const Product: React.FC<ProductProps> = ({
   brand,
   price,
   quantity,
+  created_at,
+  updated_at,
   isExpanded,
   onClick,
 }) => {
@@ -47,6 +49,12 @@ const Product: React.FC<ProductProps> = ({
           </p>
           <p>
             <strong>Quantity:</strong> {quantity}
+          </p>
+          <p>
+            <strong>Created At:</strong> {created_at}
+          </p>
+          <p>
+            <strong>Last Update At:</strong> {updated_at}
           </p>
           <button onClick={() => navigate(`/product/${id}/`)}>Edit</button>
         </>

@@ -6,6 +6,15 @@ from product.services.product_category_service import ProductCategoryService
 from product.serializers import ProductCategorySerializer
 from product.serializers import ProductSerializer
 from ..services.product_service import ProductService 
+import pytz
+
+# Function to convert UTC to IST
+def convert_utc_to_ist(utc_time):
+    kolkata_timezone = pytz.timezone('Asia/Kolkata')
+    # Ensure the datetime is in UTC before conversion
+    utc_time = utc_time.replace(tzinfo=pytz.utc)
+    # Convert to IST
+    return utc_time.astimezone(kolkata_timezone)
 
 class ProductCategoryController(APIView):
     """Controller layer for handling product category HTTP requests."""
@@ -16,12 +25,17 @@ class ProductCategoryController(APIView):
         if products and category_id:
             # Fetch products belonging to the category using the service layer
             products = ProductService.get_product_by_category(category_id)
+            products_data = []
+            for product in products:
+                product_data = ProductSerializer(product).data
+                product_data["created_at"] = convert_utc_to_ist(product.created_at).strftime("%Y-%m-%d %H:%M:%S")
+                product_data["updated_at"] = convert_utc_to_ist(product.updated_at).strftime("%Y-%m-%d %H:%M:%S")
+                products_data.append(product_data)
 
             if not products:
                 return Response({"message": "No products found for this category"}, status=status.HTTP_404_NOT_FOUND)
 
-            serializer = ProductSerializer(products, many=True)
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response(products_data, status=status.HTTP_200_OK)
 
         if category_id:
             category = ProductCategoryService.get_category_by_id(category_id)

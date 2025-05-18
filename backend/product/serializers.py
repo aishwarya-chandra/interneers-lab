@@ -4,10 +4,14 @@ from rest_framework import serializers
 
 class ProductSerializer(DocumentSerializer):
     """Serializer for MongoEngine Product model"""
-    
+
     class Meta:
         model = Product
-        fields = '__all__'
+        fields = [
+            'id', 'name', 'description', 'category', 'price', 'brand', 'quantity',
+            'created_at', 'updated_at'
+        ]
+        read_only_fields = ['created_at', 'updated_at']
 
 class ProductCategorySerializer(DocumentSerializer):
     """Serializer for MongoEngine ProductCategory model."""

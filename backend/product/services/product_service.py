@@ -1,5 +1,6 @@
 from product.repositories.product_repository import ProductRepository
 from mongoengine import ValidationError, NotUniqueError, DoesNotExist
+from datetime import datetime
 
 class ProductService:
     """Service layer for business logic and validations."""
@@ -7,8 +8,8 @@ class ProductService:
     product_repository = ProductRepository()  # Instantiate the repository
 
     @staticmethod
-    def get_all_products(page=1, page_size=10):
-        return ProductService.product_repository.get_all_paginated(page, page_size)
+    def get_all_products(page=1, page_size=10, sort_by=None, order='asc'):
+        return ProductService.product_repository.get_all_paginated(page, page_size, sort_by, order)
 
     @staticmethod
     def get_product_by_id(product_id):
@@ -32,7 +33,9 @@ class ProductService:
         if existing_products:
             raise ValueError("A product with this name already exists.")
         try:
-            return ProductService.product_repository.create(product_data)
+            product = ProductService.product_repository.create(product_data)
+            product.save()  # This will ensure created_at and updated_at are set correctly by MongoEngine
+            return product
         except (ValidationError, NotUniqueError) as e:
             raise ValueError(f"Failed to create product: {str(e)}")
     
@@ -48,7 +51,11 @@ class ProductService:
         if existing_products and str(existing_products.id) != str(product_id):
             raise ValueError("A product with this name already exists.")
         try:
-            return ProductService.product_repository.update(product_id, updated_data)
+            for key, value in updated_data.items():
+                setattr(product, key, value)
+            product.updated_at = datetime.utcnow()  # Manually updating updated_at if needed
+            product.save()  # This will update both created_at (if it's new) and updated_at
+            return product
         except (ValidationError, NotUniqueError) as e:
             raise ValueError(f"Failed to update product: {str(e)}")
     

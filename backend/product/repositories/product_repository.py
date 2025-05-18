@@ -2,6 +2,7 @@
 from product.models import Product
 from mongoengine import DoesNotExist
 from bson import ObjectId
+from datetime import datetime
 
 class ProductRepository:
     """Repository layer for interacting with MongoDB using MongoEngine."""
@@ -17,10 +18,17 @@ class ProductRepository:
             raise ValueError(f"Error creating product: {str(e)}")
 
     @staticmethod
-    def get_all_paginated(page, page_size):
-        """Fetch paginated products from MongoDB."""
+    def get_all_paginated(page, page_size, sort_by=None, order='asc'):
+        """Fetch paginated and sorted products from MongoDB."""
         skip = (page - 1) * page_size
-        queryset = Product.objects.skip(skip).limit(page_size)
+        sort_order = 1 if order == 'asc' else -1  # 1 for ascending, -1 for descending
+        
+        # If sort_by is provided, sort by that field
+        if sort_by:
+            queryset = Product.objects.skip(skip).limit(page_size).order_by(f"{'-' if order == 'desc' else ''}{sort_by}")
+        else:
+            queryset = Product.objects.skip(skip).limit(page_size)
+        
         total_count = Product.objects.count()
         return list(queryset), total_count
 
@@ -54,6 +62,7 @@ class ProductRepository:
         """Update a product by ID in MongoDB."""
         try:
             product = Product.objects.get(id=product_id)
+            update_data['updated_at'] = datetime.utcnow()  # Ensure 'updated_at' gets set
             product.update(**update_data)
             return Product.objects.get(id=product_id)  # Return the updated product
         except DoesNotExist:
